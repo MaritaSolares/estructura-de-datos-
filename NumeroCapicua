@@ -1,0 +1,29 @@
+#include "stdafx.h"
+#include "stdio.h"
+#include "conio.h"
+#include <iostream>
+using namespace std;
+
+void main ()
+{int N, i, d, inv, NO;
+ i=1;
+ do
+ {cout<<"INGRESE UN NUMERO:";
+ cin>>N;
+ }while (N<=0);
+ NO=N;
+ inv=0;
+ while(i<=N)
+ {d=N%10;
+  N=N/10;
+  inv=inv*10+d;
+ }
+ cout<<"EL NUMERO INVERTIDO ES:"<<NO,inv;
+ if(NO==inv)
+ {cout<<"NUMERO ES CAPICUA:";
+ }
+ else
+ {cout<<"EL NUMERO NO ES CAPICUA:";
+ }
+getch();
+}
