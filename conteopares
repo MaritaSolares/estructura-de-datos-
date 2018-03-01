@@ -1,0 +1,22 @@
+#include "stdafx.h"
+#include "stdio.h"
+#include "conio.h"
+#include <iostream>
+using namespace std;
+
+void main ()
+{int N, i, d, c;
+ i=1;
+ c=0;
+ cout<<"INGRESE UN NUMERO:";
+ cin>>N;
+ while(i<=N)
+ {d=N%10;
+  if(d%2==0)
+  {c=c+1;
+  }
+  N=N/10;
+ }
+ cout<<"NUMEROS PARES:"<<c;
+getch();
+}
