@@ -1,0 +1,27 @@
+#include "stdafx.h"
+#include "stdio.h"
+#include "conio.h"
+#include <iostream>
+using namespace std;
+
+void main ()
+{int N, i, d, c,inv;
+ i=1;
+ c=0;
+ cout<<"INGRESE UN NUMERO:";
+ cin>>N;
+ while(i<=N)
+ {d=N%10;
+  d=9-d;
+  c=c*10+d;
+  N=N/10;
+ }
+ N=c;
+ inv=0;
+ while(i<=N)
+ {d=N%10;
+  inv=inv*10+d;
+  N=N/10;
+ }
+ cout<<"EL COMPLEMENTO ES:"<<inv;
+getch();
