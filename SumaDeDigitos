@@ -1,0 +1,20 @@
+#include "stdafx.h"
+#include "stdio.h"
+#include "conio.h"
+#include <iostream>
+using namespace std;
+
+void main ()
+{int N, S, i, d;
+S=0;
+i=1;
+ cout<<"INGRESE EL NUMERO:";
+ cin>> N;
+ while (i<=N)
+ {d=N%10;
+  S=S+d;
+  N=N/10;
+ }
+ cout<<"LA SUMA ES:"<<S;
+ getch();
+}
