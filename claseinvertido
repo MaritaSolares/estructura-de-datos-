@@ -1,0 +1,52 @@
+#pragma once
+class invertido
+{private:
+    int n;
+public:
+	invertido (void);
+	~invertido (void);
+	int calcularinv (int n);
+};
+
+
+
+#include "StdAfx.h"
+#include "invertido.h"
+
+
+invertido:: invertido (void)
+{n=1;
+ 
+}
+invertido::~invertido (void)
+{
+}
+int invertido::calcularinv (int n)
+{  int s;
+   int d;
+   s=0;
+   while(n>0)
+   {d=n%10;
+   	n=n/10;
+    s=s*10+d;
+
+   }return s;
+}
+
+
+
+#include "stdafx.h"
+#include <iostream>
+#include "conio.h"
+#include "invertido.h"
+
+using namespace std;
+
+void main ()
+{invertido invertido1, invertido2;
+ int n;
+ cout<<"ingresar el numero:";
+ cin>>n;
+ cout<<"el numero invertido es:"<<invertido1.calcularinv(n)<<endl;
+ getch();
+}
