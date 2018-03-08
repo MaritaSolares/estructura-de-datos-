@@ -1,0 +1,52 @@
+#pragma once
+class sumadigitos
+{private:
+    int n;
+public:
+	sumadigitos (void);
+	~sumadigitos (void);
+	int calcularsumdig (int n);
+};
+
+
+
+#include "StdAfx.h"
+#include "sumadigitos.h"
+
+
+sumadigitos:: sumadigitos (void)
+{n=1;
+ 
+}
+sumadigitos::~sumadigitos (void)
+{
+}
+int sumadigitos::calcularsumdig (int n)
+{  int s;
+   int d;
+   s=0;
+   while(n>0)
+   {d=n%10;
+   	n=n/10;
+    s=s+d;
+
+   }return s;
+}
+
+
+
+#include "stdafx.h"
+#include <iostream>
+#include "conio.h"
+#include "sumadigitos.h"
+
+using namespace std;
+
+void main ()
+{sumadigitos sumadigitos1, sumadigitos2;
+ int n;
+ cout<<"ingresar el numero:";
+ cin>>n;
+ cout<<"la suma de sus digitos es:"<<sumadigitos1.calcularsumdig(n)<<endl;
+ getch();
+}
