@@ -1,0 +1,109 @@
+////Construir un procedimiento para resolver una ecuación cuadrática de la forma ax2 + bx + c = 0 considerando todos los casos es decir dos raíces reales dos raíces complejas o una raíz doble.
+
+
+
+#include "stdafx.h"
+
+#include <iostream>
+
+#include "conio.h"
+
+#include "math.h"
+
+using namespace std;
+
+void leer(float &a, float &b, float &c);
+
+void solucion( float a, float b, float c, float &x1, float &x2);
+
+
+
+void main()
+
+{float a,b,c,x1,x2;
+
+ leer(a,b,c);
+
+ solucion(a,b,c,x1,x2);
+
+ if(pow(b,2)-4*c*a==0)
+
+	 { 
+
+		 cout<<" Solucion Unica: "<<x1<<endl;
+
+      }
+
+ else  
+
+	 if(pow(b,2)-4*c*a>0)
+
+      { 
+
+		 cout<<"Soluciones Reales: "<<x1;
+
+		 cout<<"Soluciones Reales: "<<x2;
+
+      }
+
+	 else 
+
+	 { cout<<"Solucion imaginaria: "<<x1<<"+"<<x2<<"i"; 
+
+       cout<<"Solucion imaginaria: "<<x1<<"-"<<x2<<"i";
+
+     }
+
+getch ();
+
+}
+
+void leer(float &a, float &b, float &c)
+
+{do
+
+{cout<<"Ingrese valor de a  : ";
+
+ cin>>a;
+
+}while(a==0);
+
+ cout<<" Ingrese valor de b :";
+
+ cin>>b;
+
+ cout<<" Ingrese valor de c :";
+
+ cin>>c;
+
+}
+
+void solucion( float a, float b, float c, float &x1, float &x2)
+
+{ float des;
+
+  des=pow(b,2)-4*c*a;
+
+  if (des==0)
+
+    x1=-b/(2*a);
+
+  else 
+
+      if (des<0)
+
+     { x1= -b/(2*a);
+
+       x2= sqrt(-des)/(2*a);
+
+	 } 
+
+	  else
+
+     { x1= -b+ sqrt(des)/(2*a);
+
+       x2= -b- sqrt(des)/(2*a);
+
+      }
+
+}
