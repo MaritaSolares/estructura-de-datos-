@@ -1,0 +1,74 @@
+#include "stdafx.h"
+#include "conio.h"
+#include <iostream>
+using namespace std;
+
+void series(int n, int m);
+void abundante(int n);
+void main ()
+{ 
+	int op;
+	do
+	{ cout<<"MENU"<<endl;
+	  cout<<"[1]=SERIES"<<endl;
+	  cout<<"[2]=NUMERO ABUNDANTE"<<endl;
+	  cout<<"[3]=SALIR"<<endl;
+	  do
+	  { cout<<"ELEGIR UNA OPCION: ";
+	    cin>>op;
+	  }while(op<1 || op>4);
+	  switch(op)
+	  { 
+	     case 1:
+	        { int n,m;
+	          cout<<"INGRESE UN NUMERO"<<endl;
+		      cin>>n;
+		      cout<<"INGRESE EL LIMITE DEL NUMERO"<<endl;
+		      cin>>m;
+		      series(n,m);
+	        }break;
+		 case 2:
+			 { int n;
+			   cout<<"INGRESE UN NUMERO"<<endl;
+			   cin>>n;
+			   abundante(n);
+			 }break;
+		 case 3:
+			 { 
+		       default:break;
+			 }
+	  }
+	}while (op=!0);
+	getch();
+}
+
+void series(int n, int m)
+{ int s, i;
+  s=n;
+  i=1;
+  cout<<s<<" \t";
+  while(i<=m)
+  { s=s+3;
+    cout<<s<<" \t ";
+	i=i+1;
+  }
+}
+
+void abundante(int n)
+{ int s, i, j;
+  i=1;
+  s=0;
+  j=1;
+  while(i<n)
+  { if(n%j==0)
+      { s=s+j;
+      }
+  }
+  cout<<s<<endl;
+  if(s>n)
+  { cout<<"EL NUMERO ES ABUNDANTE"<<endl;
+  }
+  else
+  { cout<<"EL NUMERO NO ES ABUNDANTE"<<endl;
+  }
+}
