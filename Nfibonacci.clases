@@ -1,0 +1,60 @@
+#pragma once
+class fibonacci
+{private:
+int F[20],Fn[1];
+int N;
+public:
+	fibonacci(void);
+	~fibonacci(void);
+	void fibo(int F[],int Fn[], int N);
+	
+};
+/////////////////////////////////////////////////////
+#include "StdAfx.h"
+#include "fibonacci.h"
+#include "iostream"
+using namespace std;
+
+
+fibonacci::fibonacci(void)
+{
+}
+
+
+fibonacci::~fibonacci(void)
+{
+}
+	void fibonacci::fibo(int F[],int Fn[], int N)
+	{
+		F[0]=0;
+		F[1]=1;
+		for(int i=0;i<N;i++)
+		{F[i+2]=F[i]+F[i+1];
+		}
+		Fn[0]=F[N-1];
+		cout<<"el elemento es"<<Fn[0]<<endl;
+	
+	}
+  ///////////////////////////////////////////////////////////////////////////
+	
+// seriefibonacci.cpp : Defines the entry point for the console application.
+//
+
+#include "stdafx.h"
+#include "iostream"
+#include "conio.h"
+#include "fibonacci.h"
+using namespace std;
+
+
+void main()
+{	fibonacci fibonacci1;
+	int F[20],Fn[1],N;
+	do{
+	cout<<"Ingrese el numero de elemento"<<endl;
+	cin>>N;
+	}while(N<0);
+	fibonacci1.fibo(F,Fn,N);
+	getch();
+
+}
