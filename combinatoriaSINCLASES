@@ -1,0 +1,41 @@
+#include"stdafx.h"
+	#include <iostream>
+	#include "conio.h"
+	
+	using namespace std;
+	
+	float Fac(int x);
+	float combi(int r, int n);
+	
+	void main()
+	{int n, r;
+	float c, f;
+	cout<<"Ingrese la cantidad: ";
+	cin>>r;
+	do{
+	cout<<"Ingrese grupo: ";
+	cin>>n;
+	}while(n<=0);
+	do{
+	cout<<"Ingrese la cantidad: ";
+	cin>>r;
+	}while(r<=0||r>=n);
+	c= combi(r,n);
+	cout<<"La combinatoria es: "<< c;
+	getch();
+	}
+	
+	float Fac(int x)
+	{int fac=1, cont=1;
+	while(cont<=x)
+	{fac=fac*cont;
+	cont=cont+1;
+	}
+	return(fac);
+	}
+	
+	float combi(int r, int n)
+	{float c;
+	c= Fac(r)/(Fac(n)*Fac(r-n));
+	return(c);
+}
