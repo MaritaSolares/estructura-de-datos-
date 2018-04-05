@@ -1,0 +1,65 @@
+#include "stdafx.h"
+#include <iostream>
+#include "conio.h"
+#define N 100
+using namespace std;
+void cargar(int L, int V[]);
+void mostrar(int L, int V[]);
+void ordenar(int L, int V[]);
+
+void main()
+{int V[N], L;
+ cout<<"\n Ingrese el limite: ";
+ cin>>L;
+ cargar(L, V);
+ ordenar(L,V);
+ mostrar(L, V);
+
+ getch();
+}
+
+void cargar(int L, int V[])
+{
+ for(int i=0; i<L; i++)
+ {cout<<"\n V["<<i<<"]=";
+  cin>>V[i];
+ }
+}
+
+void mostrar(int L, int V[])
+{int may, men, j;
+ may=V[0];
+ men=V[0];
+ for(int i=0; i<L; i++)
+  {if(V[i]>may)
+    may=V[i];
+   if(V[i]<men)
+    men=V[i];
+  }
+ cout<<"\n El mayor es: "<<may;
+ cout<<"\n El menor es: "<<men;
+ j=1;
+ for(int i=0; i<L; i++)
+  {while(j<L-1)
+    {if(V[i]=V[i+j])
+	 cout<<"\n El numero"<<V[i]<<"se repite en la posicion: "<<i+j;
+     j++;
+    }
+  }
+}
+
+void ordenar(int L, int V[])
+{int aux;
+ for(int i=0; i<L-1; i++)
+   {for(int j=i+1; j<L; j++)
+      {if(V[i]>V[j])
+        {aux=V[i];
+         V[i]=V[j];
+		 V[j]=aux;
+        }
+      }
+   }
+ for(int i=0; i<L; i++)
+	 cout<<"\n V["<<i<<"]="<<V[i];
+    
+}
