@@ -1,0 +1,88 @@
+// circulos.h
+#pragma once
+class circulos
+{private :
+
+int r;
+
+
+public:
+circulos(void);
+~circulos(void);
+void perimetro (int r);
+void area (int r);
+
+
+
+
+};
+
+//circulos.cpp
+#include "StdAfx.h"
+#include "circulos.h"
+#include <iostream>
+using namespace std;
+
+
+circulos::circulos(void)
+{
+}
+
+circulos::~circulos(void)
+{
+}
+
+
+void circulos::perimetro(int r)
+{ int per=0;
+per= 2*r*3.1416;
+
+cout<<"el valor del perimetro es: "<< per;}
+
+void circulos::area (int r)
+
+{ int ar=0;
+
+ar=3.1416*(r*r);
+
+cout<< ar;}
+// main circulo.cpp
+
+// circulo.cpp : Defines the entry point for the console application.
+//
+
+#include "stdafx.h"
+# include "circulos.h"
+# include <iostream>
+#include "conio.h"
+
+using namespace std;
+void main()
+{ circulos perimetro1,area1;
+int op,r;
+do{
+cout<<"------menu-------"<<endl;
+cout<<"----1.perimetro----"<<endl;
+cout<<"----2.area-------"<<endl;
+cout<<"----3.salir------"<<endl;
+do{
+cout<<"Ingrese el numero de su eleccion: ";
+cin>>op;
+}while(op!=0 && op>3);
+switch (op)
+{ case 1:
+{cout<<" ingrese el radio: ";
+cin>> r;
+perimetro1.perimetro(r);
+break;}
+case 2:
+{cout<<"ingrese el radio: ";
+cin>>r;
+area1.area(r);
+break;}
+case 3:
+{cout<<"ERROR!!!";
+break;}
+}}while(op!=3);
+getch();
+}
