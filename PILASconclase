@@ -1,0 +1,124 @@
+#pragma once
+const int full=20;
+class pila
+{
+private:
+	int PILA[full],tope;
+public:
+	pila(void);
+	~pila(void);
+	bool pila_Vacia();
+	bool pila_Llena();
+	bool pila_Insertar(int dato);
+	bool pila_Eliminar(int &dato);
+};
+
+
+
+
+
+// pilas.cpp: define el punto de entrada de la aplicación de consola.
+//
+#include "StdAfx.h"
+#include "pilas.h"
+#include "iostream"
+#include "conio.h"
+using namespace std;
+pila::pila(void)
+{
+	tope=(-1);
+}
+pila::~pila(void)
+{		
+}
+bool pila::pila_Vacia()
+{
+	if(tope==-1)
+		return true;
+	else
+		return false;
+}
+bool pila::pila_Llena()
+{
+	if(tope==(full-1))
+		return true;
+	else
+		return false;
+}
+bool pila::pila_Insertar(int dato)
+{
+	if(pila_Llena()==false)
+	{
+		tope++;
+		PILA[tope]=dato;
+		return true;
+	}
+	else 
+		return false;
+}
+
+bool pila::pila_Eliminar(int &dato)
+{
+	if(pila_Vacia()==false)
+	{
+		dato=PILA[tope];
+		tope--;
+		return true;
+	}
+	else
+		return false;
+}
+
+
+
+
+
+#include "stdafx.h"
+#include "pilas.h"
+#include "iostream"
+using namespace std;
+void main()
+{
+	pila pila1,pila3;
+	int x,op,t,i=0;
+	cout<<"ingrese el tamanho de la pila: ";
+	cin>>t;
+	do
+	{
+		cout<<"-----MENU----"<<endl;
+		cout<<"1.-Insertar elemento(Llenar pila)"<<endl;
+		cout<<"2.-Mostrar"<<endl;
+		cout<<"3.-Salir"<<endl;
+		cin>>op;
+		switch(op)
+		{
+		case 1:
+			{
+				while(i<t)
+				{
+				cout<<"ingrese dato: ";
+				cin>>x;
+				pila1.pila_Insertar(x);
+				i++;
+				pila3=pila1;
+				}
+			}break;
+		case 2:
+			{i=0;
+			pila3=pila1;
+				while(i<t)
+				{
+					pila1.pila_Eliminar(x);
+					cout<<"_	_	_"<<endl;
+					cout<<"|	"<<x<<"	|"<<endl;
+					i++;
+				}
+				pila1=pila3;
+			}break;
+		case 3:
+			{
+				cout<<"Salir"<<endl;
+			}default:break;
+		}
+	}while(op!=3);
+}
