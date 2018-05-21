@@ -1,0 +1,260 @@
+
+pilass.h
+
+#pragma once
+
+
+
+const int MAX=7;
+
+class pilass
+
+{
+
+private:
+
+	int pilas[MAX], tope;
+
+
+
+public:
+
+	pilass(void);
+
+	~pilass(void);
+
+	void push (int dato);
+
+	int pop();
+
+	bool pila_vacio();
+
+	bool pila_lleno();
+
+	void mostrarpila();
+
+};
+
+
+
+
+
+pilass.cpp
+
+#include "StdAfx.h"
+
+#include "pilass.h"
+
+#include <iostream>
+
+
+
+using namespace std;
+
+
+
+
+
+pilass::pilass(void)
+
+{
+
+	tope=-1;
+
+}
+
+
+
+
+
+pilass::~pilass(void)
+
+{
+
+}
+
+
+
+
+
+void pilass::push (int dato)
+
+{
+
+	tope++;
+
+	pilas[tope]=dato;
+
+}
+
+
+
+
+
+int pilass::pop()
+
+{ 
+
+	int dato;
+
+	dato=pilas[tope];
+
+	tope--;
+
+	return (dato);
+
+}
+
+
+
+
+
+bool pilass::pila_vacio()
+
+{
+
+	if(tope==-1)
+
+		return true;
+
+	else
+
+		return false;
+
+}
+
+
+
+
+
+bool pilass::pila_lleno()
+
+{
+
+	if(tope==MAX-1)
+
+		return true;
+
+	else
+
+		return false;
+
+}
+
+
+
+
+
+void pilass::mostrarpila()
+
+{
+
+	int i;
+
+	for(i=tope;i>=0;i--)
+
+		cout<<"| "<<pilas[i]<<" |"<<endl;
+
+
+
+}
+
+
+
+pilas.cpp
+
+
+
+#include "stdafx.h"
+
+#include "pilass.h"
+
+#include "conio.h"
+
+#include <iostream>
+
+using namespace std;
+
+
+
+
+
+void main()
+
+{
+
+	int op, tope, x;
+
+	pilass pila1;
+
+
+
+do{
+
+	cout<<"-------MENU----------"<<endl;
+
+	cout<<"1.Push               "<<endl;
+
+	cout<<"2.Pop                "<<endl;
+
+	cout<<"3.Mostrar            "<<endl;
+
+	cout<<"4.Salir              "<<endl;
+
+	cin>>op;
+
+switch(op)
+
+{
+
+case 1:
+
+	{if (pila1.pila_lleno()==false)
+
+		{cout<<"ingrese dato:"<<endl;
+
+         cin>>x;   
+
+	    pila1.push(x);
+
+	}
+
+	else
+
+		cout<<"pila llena"<<endl;
+
+	}break;
+
+case 2:
+
+	{if (pila1.pila_vacio()==false)
+
+		pila1.pop();
+
+	else
+
+		cout<<"pila vacia"<<endl;
+
+	}break;
+
+case 3:
+
+	pila1.mostrarpila();
+
+	break;
+
+case 4:
+
+	cout<<"salir"<<endl;
+
+	break;
+
+default:
+
+	cout<<"error"<<endl;
+
+	break;
+
+
+
+}
