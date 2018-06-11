@@ -1,0 +1,850 @@
+
+public:
+
+	Materia() {
+		strcpy(idmateria,"");
+		strcpy(nombre,"");
+		estado		= ' ';
+	}
+	
+	Materia(char idMat[], char nom[]) { 
+		strcpy(idmateria,idMat);
+		strcpy(nombre,nom);
+		estado  = 'A';
+	}
+
+	~Materia(){
+		
+	}
+	
+	void setMateria(char idMat[], char nom[]) { 
+		strcpy(idmateria,idMat);
+		strcpy(nombre,nom);
+		estado  = 'A';
+	}
+
+	char *getIdMateria() {
+		return(idmateria);
+	}
+
+	char *getNombre() {
+		return(nombre);
+	}
+
+	char getEstado() {
+		return(estado);
+	}
+
+	void guardarArchivo(ofstream &fsalida) {
+		fsalida.write(reinterpret_cast<char *>(&idmateria), sizeof(idmateria));
+		fsalida.write(reinterpret_cast<char *>(&nombre), sizeof(nombre));
+		fsalida.write(reinterpret_cast<char *>(&estado), sizeof(estado));
+	}
+
+	bool leerArchivo(ifstream &fentrada) {
+		bool k = false;
+		if (fentrada.is_open() == true) {
+			fentrada.read(reinterpret_cast<char *>(&idmateria), sizeof(idmateria));
+			if (fentrada.eof() == false) {		
+				fentrada.read(reinterpret_cast<char *>(&nombre), sizeof(nombre));
+				fentrada.read(reinterpret_cast<char *>(&estado), sizeof(estado));
+				k = true;
+			}else {
+				//cout << endl << "Registro no existe";
+			}
+		}else {
+			cout << endl << "Arhivo no existe";
+		}
+		return(k);
+	}
+
+	bool eliminar(fstream &fes, int nroReg){
+		bool k = false;
+		if (fes.is_open() == true) {
+			fes.seekg(getTamBytesRegistro() * (nroReg - 1), ios::beg);
+			fes.read(reinterpret_cast<char *>(&idmateria), sizeof(idmateria));
+			if (fes.eof() == false) {
+				fes.read(reinterpret_cast<char *>(&nombre), sizeof(nombre));
+				fes.read(reinterpret_cast<char *>(&estado), sizeof(estado));
+		
+				estado = 'E';
+				fes.seekp(getTamBytesRegistro() * (nroReg - 1), ios::beg);
+				fes.write(reinterpret_cast<char *>(&idmateria), sizeof(idmateria));
+				fes.write(reinterpret_cast<char *>(&nombre), sizeof(nombre));
+				fes.write(reinterpret_cast<char *>(&estado), sizeof(estado));
+				k = true;
+			}else {
+				cout << endl << "Registro no existe";
+			}			
+		}else {
+			cout << endl << "Arhivo no existe";
+		}
+		return(k);
+	}
+
+	bool modificar(fstream &fes, int nroReg){
+		bool k = false;
+		if (fes.is_open() == true) {
+			char aux[10];
+			strcpy(aux,idmateria);
+			fes.seekg(getTamBytesRegistro() * (nroReg - 1), ios::beg);
+			fes.read(reinterpret_cast<char *>(&idmateria), sizeof(idmateria));
+			if (fes.eof() == false) {
+				strcpy(idmateria,aux);
+				estado = 'A';
+				fes.seekp(getTamBytesRegistro() * (nroReg - 1), ios::beg);
+				fes.write(reinterpret_cast<char *>(&idmateria), sizeof(idmateria));
+				fes.write(reinterpret_cast<char *>(&nombre), sizeof(nombre));
+				fes.write(reinterpret_cast<char *>(&estado), sizeof(estado));
+				k = true;
+			}else {
+				cout << endl << "Registro no existe";
+			}			
+		}else {
+			cout << endl << "Arhivo no existe";
+		}
+		return(k);
+	}
+
+	bool buscar(ifstream &fentrada, int nroReg) {
+		bool k = false;
+		if (fentrada.is_open() == true) {
+			fentrada.seekg(getTamBytesRegistro() * (nroReg - 1), ios::beg);
+			fentrada.read(reinterpret_cast<char *>(&idmateria), sizeof(idmateria));
+			fentrada.read(reinterpret_cast<char *>(&nombre), sizeof(nombre));
+			fentrada.read(reinterpret_cast<char *>(&estado), sizeof(estado));
+			if (fentrada.eof() == false) {
+				k = true;
+			}
+			else {
+				//cout << endl << "Registro no XX existe";
+			}
+		}
+		else {
+			cout << endl << "Arhivo no existe";
+		}
+		return(k);
+	}
+
+	int getTamBytesRegistro() {
+		return(sizeof(idmateria) + sizeof(nombre) + sizeof(estado) );
+	}
+
+	bool getRegMateria(char nomArchEstudiante[],char idPr[]){
+		//listar  
+		bool  k = false;
+		ifstream fentrada(nomArchEstudiante, ios::in | ios::binary);
+		while ((k == false) && (leerArchivo(fentrada) == true) ) {
+			 if (getEstado() == 'A' && (strcmp(idPr, getIdMateria()) == 0)) {
+				 k       = true; 
+			 }
+		 }
+		 fentrada.close();
+		 return(k);
+	}
+
+};
+
+//Estudiante.cpp
+#include "StdAfx.h"
+#include <iostream>
+#include <fstream>
+
+using namespace std;
+
+class Estudiante {
+
+private:
+	char	idEstudiante[10];
+	char	nombre[30];
+	int		edad;
+	char	sexo;
+	char	estado;		//eliminado = E, activo = A
+
+public:
+
+	Estudiante() {
+		strcpy(idEstudiante,"");
+		strcpy(nombre,"");
+		edad		= 0;
+		sexo		= ' ';
+		estado		= ' ';
+	}
+	
+	Estudiante(char idEst[], char nom[], int ed, char sx) { 
+		strcpy(idEstudiante,idEst);
+		strcpy(nombre,nom);
+		edad	= ed;
+		sexo	= sx;
+		estado  = 'A';
+	}
+
+	~Estudiante(){
+		
+	}
+	
+	void setEstudiante(char idEst[], char nom[], int ed, char sx) {
+		strcpy(idEstudiante,idEst);
+		strcpy(nombre,nom);
+		edad		= ed;
+		sexo		= sx;
+		estado		= 'A';
+	}
+
+	char *getIdEstudiante() {
+		return(idEstudiante);
+	}
+
+	char *getNombre() {
+		return(nombre);
+	}
+
+	int getEdad() {
+		return(edad);
+	}
+
+	char getSexo() {
+		return(sexo);
+	}
+
+	char getEstado() {
+		return(estado);
+	}
+
+	void guardarArchivo(ofstream &fsalida) {
+		fsalida.write(reinterpret_cast<char *>(&idEstudiante), sizeof(idEstudiante));
+		fsalida.write(reinterpret_cast<char *>(&nombre), sizeof(nombre));
+		fsalida.write(reinterpret_cast<char *>(&edad), sizeof(edad));
+		fsalida.write(reinterpret_cast<char *>(&sexo), sizeof(sexo));
+		fsalida.write(reinterpret_cast<char *>(&estado), sizeof(estado));
+	}
+
+	bool leerArchivo(ifstream &fentrada) {
+		bool k = false;
+		if (fentrada.is_open() == true) {
+			fentrada.read(reinterpret_cast<char *>(&idEstudiante), sizeof(idEstudiante));
+			if (fentrada.eof() == false) {		
+				fentrada.read(reinterpret_cast<char *>(&nombre), sizeof(nombre));
+				fentrada.read(reinterpret_cast<char *>(&edad), sizeof(edad));
+				fentrada.read(reinterpret_cast<char *>(&sexo), sizeof(sexo));
+				fentrada.read(reinterpret_cast<char *>(&estado), sizeof(estado));
+				k = true;
+			}else {
+				//cout << endl << "Registro no existe";
+			}
+		}else {
+			cout << endl << "Arhivo no existe";
+		}
+		return(k);
+	}
+
+	bool eliminar(fstream &fes, int nroReg){
+		bool k = false;
+		if (fes.is_open() == true) {
+			fes.seekg(getTamBytesRegistro() * (nroReg - 1), ios::beg);
+			fes.read(reinterpret_cast<char *>(&idEstudiante), sizeof(idEstudiante));
+			if (fes.eof() == false) {
+				fes.read(reinterpret_cast<char *>(&nombre), sizeof(nombre));
+				fes.read(reinterpret_cast<char *>(&edad), sizeof(edad));
+				fes.read(reinterpret_cast<char *>(&sexo), sizeof(sexo));
+				fes.read(reinterpret_cast<char *>(&estado), sizeof(estado));
+		
+				estado = 'E';
+				fes.seekp(getTamBytesRegistro() * (nroReg - 1), ios::beg);
+				fes.write(reinterpret_cast<char *>(&idEstudiante), sizeof(idEstudiante));
+				fes.write(reinterpret_cast<char *>(&nombre), sizeof(nombre));
+				fes.write(reinterpret_cast<char *>(&edad), sizeof(edad));
+				fes.write(reinterpret_cast<char *>(&sexo), sizeof(sexo));
+				fes.write(reinterpret_cast<char *>(&estado), sizeof(estado));
+				k = true;
+			}else {
+				cout << endl << "Registro no existe";
+			}			
+		}else {
+			cout << endl << "Arhivo no existe";
+		}
+		return(k);
+	}
+
+	bool modificar(fstream &fes, int nroReg){
+		bool k = false;
+		if (fes.is_open() == true) {
+			char aux[10];
+			strcpy(aux,idEstudiante);
+			fes.seekg(getTamBytesRegistro() * (nroReg - 1), ios::beg);
+			fes.read(reinterpret_cast<char *>(&idEstudiante), sizeof(idEstudiante));
+			if (fes.eof() == false) {
+				strcpy(idEstudiante,aux);
+				estado = 'A';
+				fes.seekp(getTamBytesRegistro() * (nroReg - 1), ios::beg);
+				fes.write(reinterpret_cast<char *>(&idEstudiante), sizeof(idEstudiante));
+				fes.write(reinterpret_cast<char *>(&nombre), sizeof(nombre));
+				fes.write(reinterpret_cast<char *>(&edad), sizeof(edad));
+				fes.write(reinterpret_cast<char *>(&sexo), sizeof(sexo));
+				fes.write(reinterpret_cast<char *>(&estado), sizeof(estado));
+				k = true;
+			}else {
+				cout << endl << "Registro no existe";
+			}			
+		}else {
+			cout << endl << "Arhivo no existe";
+		}
+		return(k);
+	}
+
+	bool buscar(ifstream &fentrada, int nroReg) {
+		bool k = false;
+		if (fentrada.is_open() == true) {
+			fentrada.seekg(getTamBytesRegistro() * (nroReg - 1), ios::beg);
+			fentrada.read(reinterpret_cast<char *>(&idEstudiante), sizeof(idEstudiante));
+			fentrada.read(reinterpret_cast<char *>(&nombre), sizeof(nombre));
+			fentrada.read(reinterpret_cast<char *>(&edad), sizeof(edad));
+			fentrada.read(reinterpret_cast<char *>(&sexo), sizeof(sexo));
+			fentrada.read(reinterpret_cast<char *>(&estado), sizeof(estado));
+			if (fentrada.eof() == false) {
+				k = true;
+			}
+			else {
+				//cout << endl << "Registro no XX existe";
+			}
+		}
+		else {
+			cout << endl << "Arhivo no existe";
+		}
+		return(k);
+	}
+
+	int getTamBytesRegistro() {
+		return(sizeof(idEstudiante) + sizeof(nombre) + sizeof(edad) + sizeof(sexo) + sizeof(estado) );
+	}
+
+	bool getRegEstudiante(char nomArchEstudiante[],char idPr[]){
+		//listar  
+		bool  k = false;
+		ifstream fentrada(nomArchEstudiante, ios::in | ios::binary);
+		while ((k == false) && (leerArchivo(fentrada) == true) ) {
+			 if (getEstado() == 'A' && (strcmp(idPr, getIdEstudiante()) == 0)) {
+				 k = true; 
+			 }
+		 }
+		 fentrada.close();
+		 return(k);
+	}
+
+
+};
+
+//Docente.cpp
+#include "StdAfx.h"
+#include <iostream>
+#include <fstream>
+
+using namespace std;
+
+class Docente {
+
+private:
+	char	codDocente[10];
+	char	nombre[30];
+	char	horariolunes[20];
+	char	horariomartes[20];
+	char	horariomiercoles[20];
+	char	horariojueves[20];
+	char	horarioviernes[20];
+	char	horariosabado[20];
+	char	idmateria1[10];
+	char	idmateria2[10];
+	char	idmateria3[10];
+	char    telefono[20];
+	char    correo[20];
+	char    sexo;
+	char	estado;		//eliminado = E, activo = A
+
+public:
+
+	Docente() {
+		strcpy(codDocente,"");
+		strcpy(nombre,"");
+		strcpy(horariolunes,"");
+		strcpy(horariomartes,"");
+		strcpy(horariomiercoles,"");
+		strcpy(horariojueves,"");
+		strcpy(horarioviernes,"");
+		strcpy(horariosabado,"");
+		strcpy(idmateria1,"");
+		strcpy(idmateria2,"");
+		strcpy(idmateria3,"");
+		strcpy(telefono,"");
+		strcpy(correo,"");
+		sexo		= ' ';
+		estado		= ' ';
+	}
+	
+	Docente(char codDoc[], char nom[], char h1[], char h2[], char h3[], char h4[], char h5[], char h6[], char m1[], char m2[], char m3[], char tel[], char cor[], char sx) { 
+		strcpy(codDocente,codDoc);
+		strcpy(nombre,nom);
+		strcpy(horariolunes,h1);
+		strcpy(horariomartes,h2);
+		strcpy(horariomiercoles,h3);
+		strcpy(horariojueves,h4);
+		strcpy(horarioviernes,h5);
+		strcpy(horariosabado,h6);
+		strcpy(idmateria1,m1);
+		strcpy(idmateria2,m2);
+		strcpy(idmateria3,m3);
+		strcpy(telefono,tel);
+		strcpy(correo,cor);
+		sexo	= sx;
+		estado  = 'A';
+	}
+
+	~Docente(){
+		
+	}
+	
+	void setDocente(char codDoc[], char nom[], char h1[], char h2[], char h3[], char h4[], char h5[], char h6[], char m1[], char m2[], char m3[], char tel[], char cor[], char sx) { 
+		strcpy(codDocente,codDoc);
+		strcpy(nombre,nom);
+		strcpy(horariolunes,h1);
+		strcpy(horariomartes,h2);
+		strcpy(horariomiercoles,h3);
+		strcpy(horariojueves,h4);
+		strcpy(horarioviernes,h5);
+		strcpy(horariosabado,h6);
+		strcpy(idmateria1,m1);
+		strcpy(idmateria2,m2);
+		strcpy(idmateria3,m3);
+		strcpy(telefono,tel);
+		strcpy(correo,cor);
+		sexo	= sx;
+		estado  = 'A';
+	}
+
+	char *getCodDocente() {
+		return(codDocente);
+	}
+
+	char *getNombre() {
+		return(nombre);
+	}
+
+	char *getHorarioLunes() {
+		return(horariolunes);
+	}
+
+	char *getHorarioMartes() {
+		return(horariomartes);
+	}
+
+	char *getHorarioMiercoles() {
+		return(horariomiercoles);
+	}
+
+	char *getHorarioJueves() {
+		return(horariojueves);
+	}
+
+	char *getHorarioViernes() {
+		return(horarioviernes);
+	}
+
+	char *getHorarioSabado() {
+		return(horariosabado);
+	}
+
+	char *getIdMateria1() {
+		return(idmateria1);
+	}
+
+	char *getIdMateria2() {
+		return(idmateria2);
+	}
+
+	char *getIdMateria3() {
+		return(idmateria3);
+	}
+
+	char *getTelefono() {
+		return(telefono);
+	}
+
+	char *getCorreo() {
+		return(correo);
+	}
+
+	char getSexo() {
+		return(sexo);
+	}
+	
+	char getEstado() {
+		return(estado);
+	}
+
+	void guardarArchivo(ofstream &fsalida) {
+		fsalida.write(reinterpret_cast<char *>(&codDocente), sizeof(codDocente));
+		fsalida.write(reinterpret_cast<char *>(&nombre), sizeof(nombre));
+		fsalida.write(reinterpret_cast<char *>(&horariolunes), sizeof(horariolunes));
+		fsalida.write(reinterpret_cast<char *>(&horariomartes), sizeof(horariomartes));
+		fsalida.write(reinterpret_cast<char *>(&horariomiercoles), sizeof(horariomiercoles));
+		fsalida.write(reinterpret_cast<char *>(&horariojueves), sizeof(horariojueves));
+		fsalida.write(reinterpret_cast<char *>(&horarioviernes), sizeof(horarioviernes));
+		fsalida.write(reinterpret_cast<char *>(&horariosabado), sizeof(horariosabado));
+		fsalida.write(reinterpret_cast<char *>(&idmateria1), sizeof(idmateria1));
+		fsalida.write(reinterpret_cast<char *>(&idmateria2), sizeof(idmateria2));
+		fsalida.write(reinterpret_cast<char *>(&idmateria3), sizeof(idmateria3));
+		fsalida.write(reinterpret_cast<char *>(&telefono), sizeof(telefono));
+		fsalida.write(reinterpret_cast<char *>(&correo), sizeof(correo));
+		fsalida.write(reinterpret_cast<char *>(&sexo), sizeof(sexo));
+		fsalida.write(reinterpret_cast<char *>(&estado), sizeof(estado));
+	}
+
+	bool leerArchivo(ifstream &fentrada) {
+		bool k = false;
+		if (fentrada.is_open() == true) {
+			fentrada.read(reinterpret_cast<char *>(&codDocente), sizeof(codDocente));
+			if (fentrada.eof() == false) {		
+				fentrada.read(reinterpret_cast<char *>(&nombre), sizeof(nombre));
+				fentrada.read(reinterpret_cast<char *>(&horariolunes), sizeof(horariolunes));
+				fentrada.read(reinterpret_cast<char *>(&horariomartes), sizeof(horariomartes));
+				fentrada.read(reinterpret_cast<char *>(&horariomiercoles), sizeof(horariomiercoles));
+				fentrada.read(reinterpret_cast<char *>(&horariojueves), sizeof(horariojueves));
+				fentrada.read(reinterpret_cast<char *>(&horarioviernes), sizeof(horarioviernes));
+				fentrada.read(reinterpret_cast<char *>(&horariosabado), sizeof(horariosabado));
+				fentrada.read(reinterpret_cast<char *>(&idmateria1), sizeof(idmateria1));
+				fentrada.read(reinterpret_cast<char *>(&idmateria2), sizeof(idmateria2));
+				fentrada.read(reinterpret_cast<char *>(&idmateria3), sizeof(idmateria3));
+				fentrada.read(reinterpret_cast<char *>(&telefono), sizeof(telefono));
+				fentrada.read(reinterpret_cast<char *>(&correo), sizeof(correo));
+				fentrada.read(reinterpret_cast<char *>(&sexo), sizeof(sexo));
+				fentrada.read(reinterpret_cast<char *>(&estado), sizeof(estado));
+				k = true;
+			}else {
+				//cout << endl << "Registro no existe";
+			}
+		}else {
+			cout << endl << "Arhivo no existe";
+		}
+		return(k);
+	}
+
+	bool eliminar(fstream &fes, int nroReg){
+		bool k = false;
+		if (fes.is_open() == true) {
+			fes.seekg(getTamBytesRegistro() * (nroReg - 1), ios::beg);
+			fes.read(reinterpret_cast<char *>(&codDocente), sizeof(codDocente));
+			if (fes.eof() == false) {
+				fes.read(reinterpret_cast<char *>(&nombre), sizeof(nombre));
+				fes.read(reinterpret_cast<char *>(&horariolunes), sizeof(horariolunes));
+				fes.read(reinterpret_cast<char *>(&horariomartes), sizeof(horariomartes));
+				fes.read(reinterpret_cast<char *>(&horariomiercoles), sizeof(horariomiercoles));
+				fes.read(reinterpret_cast<char *>(&horariojueves), sizeof(horariojueves));
+				fes.read(reinterpret_cast<char *>(&horarioviernes), sizeof(horarioviernes));
+				fes.read(reinterpret_cast<char *>(&horariosabado), sizeof(horariosabado));
+				fes.read(reinterpret_cast<char *>(&idmateria1), sizeof(idmateria1));
+				fes.read(reinterpret_cast<char *>(&idmateria2), sizeof(idmateria2));
+				fes.read(reinterpret_cast<char *>(&idmateria3), sizeof(idmateria3));
+				fes.read(reinterpret_cast<char *>(&telefono), sizeof(telefono));
+				fes.read(reinterpret_cast<char *>(&correo), sizeof(correo));
+				fes.read(reinterpret_cast<char *>(&sexo), sizeof(sexo));
+				fes.read(reinterpret_cast<char *>(&estado), sizeof(estado));
+		
+				estado = 'E';
+				
+				fes.seekp(getTamBytesRegistro() * (nroReg - 1), ios::beg);
+				fes.write(reinterpret_cast<char *>(&codDocente), sizeof(codDocente));
+				fes.write(reinterpret_cast<char *>(&nombre), sizeof(nombre));
+				fes.write(reinterpret_cast<char *>(&horariolunes), sizeof(horariolunes));
+				fes.write(reinterpret_cast<char *>(&horariomartes), sizeof(horariomartes));
+				fes.write(reinterpret_cast<char *>(&horariomiercoles), sizeof(horariomiercoles));
+				fes.write(reinterpret_cast<char *>(&horariojueves), sizeof(horariojueves));
+				fes.write(reinterpret_cast<char *>(&horarioviernes), sizeof(horarioviernes));
+				fes.write(reinterpret_cast<char *>(&horariosabado), sizeof(horariosabado));
+				fes.write(reinterpret_cast<char *>(&idmateria1), sizeof(idmateria1));
+				fes.write(reinterpret_cast<char *>(&idmateria2), sizeof(idmateria2));
+				fes.write(reinterpret_cast<char *>(&idmateria3), sizeof(idmateria3));
+				fes.write(reinterpret_cast<char *>(&telefono), sizeof(telefono));
+				fes.write(reinterpret_cast<char *>(&correo), sizeof(correo));
+				fes.write(reinterpret_cast<char *>(&sexo), sizeof(sexo));
+				fes.write(reinterpret_cast<char *>(&estado), sizeof(estado));
+				k = true;
+			}else {
+				cout << endl << "Registro no existe";
+			}			
+		}else {
+			cout << endl << "Arhivo no existe";
+		}
+		return(k);
+	}
+
+	bool modificar(fstream &fes, int nroReg){
+		bool k = false;
+		if (fes.is_open() == true) {
+			char aux[10];
+			strcpy(aux,codDocente);
+			fes.seekg(getTamBytesRegistro() * (nroReg - 1), ios::beg);
+			fes.read(reinterpret_cast<char *>(&codDocente), sizeof(codDocente));
+			if (fes.eof() == false) {
+				strcpy(codDocente,aux);
+				estado = 'A';
+				fes.seekp(getTamBytesRegistro() * (nroReg - 1), ios::beg);
+				fes.write(reinterpret_cast<char *>(&codDocente), sizeof(codDocente));
+				fes.write(reinterpret_cast<char *>(&nombre), sizeof(nombre));
+				fes.write(reinterpret_cast<char *>(&horariolunes), sizeof(horariolunes));
+				fes.write(reinterpret_cast<char *>(&horariomartes), sizeof(horariomartes));
+				fes.write(reinterpret_cast<char *>(&horariomiercoles), sizeof(horariomiercoles));
+				fes.write(reinterpret_cast<char *>(&horariojueves), sizeof(horariojueves));
+				fes.write(reinterpret_cast<char *>(&horarioviernes), sizeof(horarioviernes));
+				fes.write(reinterpret_cast<char *>(&horariosabado), sizeof(horariosabado));
+				fes.write(reinterpret_cast<char *>(&idmateria1), sizeof(idmateria1));
+				fes.write(reinterpret_cast<char *>(&idmateria2), sizeof(idmateria2));
+				fes.write(reinterpret_cast<char *>(&idmateria3), sizeof(idmateria3));
+				fes.write(reinterpret_cast<char *>(&telefono), sizeof(telefono));
+				fes.write(reinterpret_cast<char *>(&correo), sizeof(correo));
+				fes.write(reinterpret_cast<char *>(&sexo), sizeof(sexo));
+				fes.write(reinterpret_cast<char *>(&estado), sizeof(estado));
+				k = true;
+			}else {
+				cout << endl << "Registro no existe";
+			}			
+		}else {
+			cout << endl << "Arhivo no existe";
+		}
+		return(k);
+	}
+
+	bool buscar(ifstream &fentrada, int nroReg) {
+		bool k = false;
+		if (fentrada.is_open() == true) {
+			fentrada.seekg(getTamBytesRegistro() * (nroReg - 1), ios::beg);
+			fentrada.read(reinterpret_cast<char *>(&codDocente), sizeof(codDocente));
+			fentrada.read(reinterpret_cast<char *>(&nombre), sizeof(nombre));
+			fentrada.read(reinterpret_cast<char *>(&horariolunes), sizeof(horariolunes));
+			fentrada.read(reinterpret_cast<char *>(&horariomartes), sizeof(horariomartes));
+			fentrada.read(reinterpret_cast<char *>(&horariomiercoles), sizeof(horariomiercoles));
+			fentrada.read(reinterpret_cast<char *>(&horariojueves), sizeof(horariojueves));
+			fentrada.read(reinterpret_cast<char *>(&horarioviernes), sizeof(horarioviernes));
+			fentrada.read(reinterpret_cast<char *>(&horariosabado), sizeof(horariosabado));
+			fentrada.read(reinterpret_cast<char *>(&idmateria1), sizeof(idmateria1));
+			fentrada.read(reinterpret_cast<char *>(&idmateria2), sizeof(idmateria2));
+			fentrada.read(reinterpret_cast<char *>(&idmateria3), sizeof(idmateria3));
+			fentrada.read(reinterpret_cast<char *>(&telefono), sizeof(telefono));
+			fentrada.read(reinterpret_cast<char *>(&correo), sizeof(correo));
+			fentrada.read(reinterpret_cast<char *>(&sexo), sizeof(sexo));
+			fentrada.read(reinterpret_cast<char *>(&estado), sizeof(estado));
+			if (fentrada.eof() == false) {
+				k = true;
+			}
+			else {
+				//cout << endl << "Registro no XX existe";
+			}
+		}
+		else {
+			cout << endl << "Arhivo no existe";
+		}
+		return(k);
+	}
+
+	int getTamBytesRegistro() {
+		return(sizeof(codDocente) + sizeof(nombre) + sizeof(horariolunes) + sizeof(horariomartes) + sizeof(horariomiercoles) + sizeof(horariojueves) + sizeof(horarioviernes) + sizeof(horariosabado) + sizeof(idmateria1) + sizeof(idmateria2) + sizeof(idmateria3) + sizeof(telefono) + sizeof(correo) + sizeof(sexo) + sizeof(estado) );
+	}
+
+	bool getRegDocente(char nomArchEstudiante[],char idPr[]){
+		//listar  
+		bool  k = false;
+		ifstream fentrada(nomArchEstudiante, ios::in | ios::binary);
+		while ((k == false) && (leerArchivo(fentrada) == true) ) {
+			 if (getEstado() == 'A' && (strcmp(idPr, getCodDocente()) == 0)) {
+				 k       = true; 
+			 }
+		 }
+		 fentrada.close();
+		 return(k);
+	}
+//Clases.cpp
+#include "StdAfx.h"
+#include <iostream>
+#include <fstream>
+
+
+using namespace std;
+
+// No hay modificar
+
+class Clase {
+
+private:
+	char	idClase[10];
+	char	fecha[30];
+	char	horario[20];
+	char	idEstudiante[10];
+	char	codDocente[10];
+	char	idMateria[10];
+	char	estado;		//eliminado = E, activo = A
+
+public:
+	Clase() {
+		strcpy(idClase,"");
+		strcpy(fecha,"");
+		strcpy(horario,"");
+		strcpy(idEstudiante,"");
+		strcpy(codDocente,"");
+		strcpy(idMateria,"");
+		estado		= ' ';
+	}
+	
+	Clase(char idCla[], char fec[], char hor[], char idEst[], char codDoc[], char idMat[]) { 
+		strcpy(idClase, idCla);
+		strcpy(fecha, fec);
+		strcpy(horario, hor);
+		strcpy(idEstudiante, idEst);
+		strcpy(codDocente, codDoc);
+		strcpy(idMateria,idMat);
+		estado  = 'A';
+	}
+
+	~Clase(){
+		
+	}
+	
+	void setClase(char idCla[], char fec[], char hor[], char idEst[], char codDoc[], char idMat[]) { 
+		strcpy(idClase, idCla);
+		strcpy(fecha, fec);
+		strcpy(horario, hor);
+		strcpy(idEstudiante, idEst);
+		strcpy(codDocente, codDoc);
+		strcpy(idMateria,idMat);
+		estado  = 'A';
+	}
+	
+	char *getIdClase() {
+		return(idClase);
+	}
+
+	char *getFecha() {
+		return(fecha);
+	}
+
+	char *getHorario() {
+		return(horario);
+	}
+
+	char *getIdEstudiante() {
+		return(idEstudiante);
+	}
+
+	char *getCodDocente() {
+		return(codDocente);
+	}
+
+	char *getIdMateria() {
+		return(idMateria);
+	}
+
+	char getEstado() {
+		return(estado);
+	}
+
+	void guardarArchivo(ofstream &fsalida) {
+		fsalida.write(reinterpret_cast<char *>(&idClase), sizeof(idClase));
+		fsalida.write(reinterpret_cast<char *>(&fecha), sizeof(fecha));
+		fsalida.write(reinterpret_cast<char *>(&horario), sizeof(horario));
+		fsalida.write(reinterpret_cast<char *>(&idEstudiante), sizeof(idEstudiante));
+		fsalida.write(reinterpret_cast<char *>(&codDocente), sizeof(codDocente));
+		fsalida.write(reinterpret_cast<char *>(&idMateria), sizeof(idMateria));
+		fsalida.write(reinterpret_cast<char *>(&estado), sizeof(estado));
+	}
+
+	bool leerArchivo(ifstream &fentrada) {
+		bool k = false;
+		if (fentrada.is_open() == true) {
+			fentrada.read(reinterpret_cast<char *>(&idClase), sizeof(idClase));
+			if (fentrada.eof() == false) {		
+				fentrada.read(reinterpret_cast<char *>(&fecha), sizeof(fecha));
+				fentrada.read(reinterpret_cast<char *>(&horario), sizeof(horario));
+				fentrada.read(reinterpret_cast<char *>(&idEstudiante), sizeof(idEstudiante));
+				fentrada.read(reinterpret_cast<char *>(&codDocente), sizeof(codDocente));
+				fentrada.read(reinterpret_cast<char *>(&idMateria), sizeof(idMateria));
+				fentrada.read(reinterpret_cast<char *>(&estado), sizeof(estado));
+				k = true;
+			}else {
+				//cout << endl << "Registro no existe";
+			}
+		}else {
+			cout << endl << "Arhivo no existe";
+		}
+		return(k);
+	}
+
+	bool eliminar(fstream &fes, int nroReg){
+		bool k = false;
+		if (fes.is_open() == true) {
+			fes.seekg(getTamBytesRegistro() * (nroReg - 1), ios::beg);
+			fes.read(reinterpret_cast<char *>(&idClase), sizeof(idClase));
+			if (fes.eof() == false) {
+				fes.read(reinterpret_cast<char *>(&fecha), sizeof(fecha));
+				fes.read(reinterpret_cast<char *>(&horario), sizeof(horario));
+				fes.read(reinterpret_cast<char *>(&idEstudiante), sizeof(idEstudiante));
+				fes.read(reinterpret_cast<char *>(&codDocente), sizeof(codDocente));
+				fes.read(reinterpret_cast<char *>(&idMateria), sizeof(idMateria));
+				fes.read(reinterpret_cast<char *>(&estado), sizeof(estado));
+
+				estado = 'E';
+				fes.seekp(getTamBytesRegistro() * (nroReg - 1), ios::beg);
+				fes.write(reinterpret_cast<char *>(&idClase), sizeof(idClase));
+				fes.write(reinterpret_cast<char *>(&fecha), sizeof(fecha));
+				fes.write(reinterpret_cast<char *>(&horario), sizeof(horario));
+				fes.write(reinterpret_cast<char *>(&idEstudiante), sizeof(idEstudiante));
+				fes.write(reinterpret_cast<char *>(&codDocente), sizeof(codDocente));
+				fes.write(reinterpret_cast<char *>(&estado), sizeof(estado));
+				k = true;
+			}else {
+				cout << endl << "Registro no existe";
+			}			
+		}else {
+			cout << endl << "Arhivo no existe";
+		}
+		return(k);
+	}
+
+	bool buscar(ifstream &fentrada, int nroReg) {
+		bool k = false;
+		if (fentrada.is_open() == true) {
+			fentrada.seekg(getTamBytesRegistro() * (nroReg - 1), ios::beg);
+			fentrada.read(reinterpret_cast<char *>(&idClase), sizeof(idClase));
+			fentrada.read(reinterpret_cast<char *>(&fecha), sizeof(fecha));
+			fentrada.read(reinterpret_cast<char *>(&horario), sizeof(horario));
+			fentrada.read(reinterpret_cast<char *>(&idEstudiante), sizeof(idEstudiante));
+			fentrada.read(reinterpret_cast<char *>(&codDocente), sizeof(codDocente));
+			fentrada.read(reinterpret_cast<char *>(&idMateria), sizeof(idMateria));
+			fentrada.read(reinterpret_cast<char *>(&estado), sizeof(estado));
+			if (fentrada.eof() == false) {
+				k = true;
+			}
+			else {
+				//cout << endl << "Registro no XX existe";
+			}
+		}
+		else {
+			cout << endl << "Arhivo no existe";
+		}
+		return(k);
+	}
+
+	int getTamBytesRegistro() {
+		return(sizeof(idClase) + sizeof(fecha) + sizeof(horario) + sizeof(idEstudiante) + sizeof(codDocente) + + sizeof(idMateria) + sizeof(estado));
+	}
+
+	bool getRegMateria(char nomArchClase[],char idPr[]){
+		//listar  
+		bool  k = false;
+		ifstream fentrada(nomArchClase, ios::in | ios::binary);
+		while ((k == false) && (leerArchivo(fentrada) == true) ) {
+			 if (getEstado() == 'A' && (strcmp(idPr, getIdClase()) == 0)) {
+				 k       = true; 
+			 }
+		 }
+		 fentrada.close();
+		 return(k);
+	}
+
+};
